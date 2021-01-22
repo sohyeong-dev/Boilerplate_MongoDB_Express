@@ -22,11 +22,6 @@ export const getAll = async (req, res) => {
 export const getById = async (req, res) => {
   try {
     const post = await postService.getById(req.params.postId);
-    if (!post) {
-      let err = new Error('post not found');
-      err.status = 404;
-      throw (err);
-    }
     res.status(200).json({ data: post });
   } catch (err) {
     res.status(err.status || 500).json({ error: err.message || 'find post by id failed' });
@@ -39,9 +34,9 @@ export const update = async (req, res) => {
     const { title, content } = req.body;
     const result = await postService.update(postId, { title, content });
     if (!result.n) {
-      let err = new Error('post not found');
-      err.status = 404;
-      throw (err);
+      res.json({
+        message: 'post not found'
+      });
     }
     res.json({
       message: 'post updated'
@@ -56,9 +51,9 @@ export const deleteById = async (req, res) => {
     const { postId } = req.params;
     const result = await postService.deleteById(postId);
     if (!result.n) {
-      let err = new Error('post not found');
-      err.status = 404;
-      throw (err);
+      res.json({
+        message: 'post not found'
+      });
     }
     res.json({
       message: 'post deleted'
