@@ -26,10 +26,11 @@ export const getById = async (id) => {
   return post;
 };
 
-export const update = async (id, data) => {
+export const update = async (data) => {
+  const { id, ...val } = data;
   const result = await Post.updateOne({
     _id: id
-  }, Object.fromEntries(Object.entries(data).filter(([, v]) => v)));
+  }, Object.fromEntries(Object.entries(val).filter(([, v]) => v)));
   return result;
 };
 

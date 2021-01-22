@@ -32,7 +32,7 @@ export const update = async (req, res) => {
   try {
     const { postId } = req.params;
     const { title, content } = req.body;
-    const result = await postService.update(postId, { title, content });
+    const result = await postService.update({ id: postId, title, content });
     if (!result.n) {
       res.json({
         message: 'post not found'
