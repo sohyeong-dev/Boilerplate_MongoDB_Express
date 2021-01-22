@@ -4,13 +4,13 @@ import Hashtag from '../models/Hashtag.js';
 export const create = async (data) => {
   const post = new Post(data);
   const hashtags = data.content.match(/#[^\s#]+/g);
-  const result = await Promise.all(
-    hashtags.map(async tagWithHash => {
-      const tag = tagWithHash.slice(1).toLowerCase();
-      const r = await Hashtag.findOne({ tag }) || await Hashtag.create({ tag });
-      return r;
-    })
-  );
+const addOrFindHashTags = hashtags.map(async tagWithHash => {
+   const tag = tagWithHash.slice(1).toLowerCase();
+   const r = await Hashtag.findOne({ tag }) || await Hashtag.create({ tag });
+   return r;
+ });
+ 
+const result = await Promise.all(addOrFindHashTags);
   post.hashtags.push(...result.map(r => r._id));
   await post.save();
   return post;
