@@ -24,7 +24,7 @@ export const getById = async (req, res) => {
     const post = await postService.getById(req.params.postId);
     res.status(200).json({ data: post });
   } catch (err) {
-    res.status(err.status || 500).json({ error: err.message || 'find post by id failed' });
+    res.status(err.status ?? 500).json({ error: err.message ?? 'find post by id failed' });
   }
 };
 
