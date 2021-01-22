@@ -1,8 +1,9 @@
 import Post from '../models/Post.js';
 import Hashtag from '../models/Hashtag.js';
 
-export const create = async (data, hashtags) => {
+export const create = async (data) => {
   const post = new Post(data);
+  const hashtags = data.content.match(/#[^\s#]+/g);
   const result = await Promise.all(
     hashtags.map(async tagWithHash => {
       const tag = tagWithHash.slice(1).toLowerCase();

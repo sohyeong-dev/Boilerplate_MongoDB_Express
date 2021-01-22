@@ -3,8 +3,7 @@ import * as postService from '../services/postService.js';
 export const create = async (req, res) => {
   try {
     const { title, content } = req.body;
-    const hashtags = content.match(/#[^\s#]+/g);
-    const post = await postService.create({ title, content }, hashtags);
+    const post = await postService.create({ title, content });
     res.status(201).json({ data: post });
   } catch (err) {
     res.status(500).json({ error: 'add post failed' });
