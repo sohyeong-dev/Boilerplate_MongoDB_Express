@@ -30,7 +30,7 @@ export const update = async (data) => {
   const { id, ...val } = data;
   const result = await Post.updateOne({
     _id: id
-  }, Object.fromEntries(Object.entries(val).filter(([, v]) => v)));
+  }, val);
   return result;
 };
 

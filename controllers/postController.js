@@ -3,6 +3,11 @@ import * as postService from '../services/postService.js';
 export const create = async (req, res) => {
   try {
     const { title, content } = req.body;
+    if (!title || !content) {
+      let err = new Error('required value cannot be empty');
+      err.status = 400;
+      throw (err);
+    }
     const post = await postService.create({ title, content });
     res.status(201).json({ data: post });
   } catch (err) {
@@ -32,6 +37,11 @@ export const update = async (req, res) => {
   try {
     const { postId } = req.params;
     const { title, content } = req.body;
+    if (!title || !content) {
+      let err = new Error('required value cannot be empty');
+      err.status = 400;
+      throw (err);
+    }
     const result = await postService.update({ id: postId, title, content });
     if (!result.n) {
       res.json({
