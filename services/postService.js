@@ -3,15 +3,20 @@ import Hashtag from '../models/Hashtag.js';
 
 export const create = async (data) => {
   const post = new Post(data);
-  const hashtags = data.content.match(/#[^\s#]+/g);
-const addOrFindHashTags = hashtags.map(async tagWithHash => {
-   const tag = tagWithHash.slice(1).toLowerCase();
-   const r = await Hashtag.findOne({ tag }) || await Hashtag.create({ tag });
-   return r;
- });
- 
-const result = await Promise.all(addOrFindHashTags);
-  post.hashtags.push(...result.map(r => r._id));
+  const hashtags = data.content.match(/#[^\s#]+/g).map(
+    tag => tag.slice(1).toLowerCase()
+  );
+  const tags = await Hashtag.find({ tag: { $in: hashtags } });
+  const existedTags = tags.map(t => t.tag);
+  const newTags = await Hashtag.insertMany(
+    hashtags.filter(tag => !existedTags.includes(tag)).map(
+      tag => {
+        return { tag };
+      }
+    )
+  );
+  tags.push(...newTags);
+  post.hashtags.push(...tags.map(tag => tag._id));
   await post.save();
   return post;
 };
